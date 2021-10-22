@@ -1,0 +1,9 @@
+#!/usr/bin/make -f
+# -*- makefile -*-
+
+build:
+	mkdir -p output
+	raco exe -o output/machine-check main.rkt
+	raco distribute usr output/machine-check
+%:
+	dh $@

@@ -1,0 +1,13 @@
+Source: machine-check
+Priority: optional
+Maintainer: Rick van de Loo <rickvandeloo@gmail.com>
+Build-Depends: debhelper (>= 10.0.0), racket
+Standards-Version: 4.5.1
+Homepage: https://github.com/vdloo/machine-check
+Vcs-Git: git@github.com:vdloo/machine-check.git
+
+Package: machine-check
+Section: libs
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}
+Description: Write unit tests in Racket to verify if the state of your machine is what you expect
