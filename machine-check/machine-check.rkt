@@ -4,7 +4,9 @@
 (require racket/include)
 (require racket/string)
 (require racket/port)
+(require racket/function)
 (require rackunit)
+(require detect-os-release)
 
 (provide machine-check)
 (provide get-packages-installed)
@@ -12,9 +14,9 @@
 (define error-count 0)
 
 (define check-output
-  (λ (command argument)
+  (λ (arguments)
     (define-values (sp out in err)
-      (subprocess #f #f #f command argument))
+      (apply (curry subprocess #f #f #f) arguments))
     (subprocess-wait sp)
     (define lines (string-split (port->string out) "\n"))
     (close-input-port out)
@@ -23,8 +25,20 @@
     lines))
 
 (define get-packages-installed
-  (λ (#:check-output-with [check-output check-output])
-     (check-output "/usr/bin/pacman" "-Qq")))
+  (λ (#:detect-os-with [detect-os detect-os]
+      #:check-output-with [check-output check-output])
+     (let ((os-id (detect-os))
+           (arch-command '("/usr/bin/pacman" "-Qq"))
+           (debian-like-command '("/usr/bin/dpkg-query" "-f" "'${binary:Package}\n'" "-W")))
+
+       (check-output
+         (cond
+           [(equal? "arch" os-id) arch-command]
+           [(equal? "debian" os-id) debian-like-command]
+           [(equal? "ubuntu" os-id) debian-like-command]
+           [else (raise-arguments-error 
+                   'os-not-supported 
+                   (format "Your OS ~a is currently not supported by machine-check" os-id))])))))
 
 (define check-package-installed
   (λ (package-name)
