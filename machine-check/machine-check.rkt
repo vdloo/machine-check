@@ -29,13 +29,17 @@
       #:check-output-with [check-output check-output])
      (let ((os-id (detect-os))
            (arch-command '("/usr/bin/pacman" "-Qq"))
-           (debian-like-command '("/usr/bin/dpkg-query" "-f" "'${binary:Package}\n'" "-W")))
+           (debian-like-command '("/usr/bin/dpkg-query" "-f" "'${binary:Package}\n'" "-W"))
+           (redhat-like-command '("/usr/bin/rpm" "-qa" "--qf" "'%{NAME}\n'")))
 
        (check-output
          (cond
            [(equal? "arch" os-id) arch-command]
            [(equal? "debian" os-id) debian-like-command]
            [(equal? "ubuntu" os-id) debian-like-command]
+           [(equal? "rhel" os-id) redhat-like-command]
+           [(equal? "centos" os-id) redhat-like-command]
+           [(equal? "fedora" os-id) redhat-like-command]
            [else (raise-arguments-error 
                    'os-not-supported 
                    (format "Your OS ~a is currently not supported by machine-check" os-id))])))))

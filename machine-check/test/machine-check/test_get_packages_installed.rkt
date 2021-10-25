@@ -50,10 +50,49 @@
           #:check-output-with mock-check-output))
 
       (test-case
-        "Test that get-packages-installed raises if unsupported distro"
+        "Test that get-packages-installed calls check-output with rpm on CentOS"
+        (define mock-detect-os-with
+          (λ ()
+             "centos"))
+        (define mock-check-output 
+          (λ (arguments)
+             (check-equal? arguments '("/usr/bin/rpm" "-qa" "--qf" "'%{NAME}\n'"))))
+
+        (get-packages-installed 
+          #:detect-os-with mock-detect-os-with
+          #:check-output-with mock-check-output))
+
+      (test-case
+        "Test that get-packages-installed calls check-output with rpm on Red Hat"
+        (define mock-detect-os-with
+          (λ ()
+             "rhel"))
+        (define mock-check-output 
+          (λ (arguments)
+             (check-equal? arguments '("/usr/bin/rpm" "-qa" "--qf" "'%{NAME}\n'"))))
+
+        (get-packages-installed 
+          #:detect-os-with mock-detect-os-with
+          #:check-output-with mock-check-output))
+
+      (test-case
+        "Test that get-packages-installed calls check-output with apt on Fedora"
         (define mock-detect-os-with
           (λ ()
              "fedora"))
+        (define mock-check-output 
+          (λ (arguments)
+             (check-equal? arguments '("/usr/bin/rpm" "-qa" "--qf" "'%{NAME}\n'"))))
+
+        (get-packages-installed 
+          #:detect-os-with mock-detect-os-with
+          #:check-output-with mock-check-output))
+
+      (test-case
+        "Test that get-packages-installed raises if unsupported distro"
+        (define mock-detect-os-with
+          (λ ()
+             "gentoo"))
         (define mock-check-output 
           (λ (arguments)
              (check-true #f)))  ; check-output should not be called in this test-case
