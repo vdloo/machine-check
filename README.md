@@ -18,7 +18,8 @@ git clone https://github.com/vdloo/machine-check
 cd machine-check
 sudo mkdir -p /srv/machine-check
 chown -R youruser.youruser /srv/machine-check
-cp examples/simple/main.rkt /srv/machine-check/main.rkt
+# Look in examples/simple for inspiration
+touch /srv/machine-check/main.rkt
 # And finally, run the program
 ./main.rkt
 ```
