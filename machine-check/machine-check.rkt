@@ -29,7 +29,7 @@
       #:check-output-with [check-output check-output])
      (let ((os-id (detect-os))
            (arch-command '("/usr/bin/pacman" "-Qq"))
-           (debian-like-command '("/usr/bin/dpkg-query" "-f" "'${binary:Package}\n'" "-W"))
+           (debian-like-command '("/usr/bin/dpkg-query" "-f" "${binary:Package}\n" "-W"))
            (redhat-like-command '("/usr/bin/rpm" "-qa" "--qf" "'%{NAME}\n'")))
 
        (check-output
