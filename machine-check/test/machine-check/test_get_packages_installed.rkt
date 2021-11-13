@@ -30,7 +30,7 @@
              "debian"))
         (define mock-check-output 
           (λ (arguments)
-             (check-equal? arguments '("/usr/bin/dpkg-query" "-f" "'${binary:Package}\n'" "-W"))))
+             (check-equal? arguments '("/usr/bin/dpkg-query" "-f" "${binary:Package}\n" "-W"))))
 
         (get-packages-installed 
           #:detect-os-with mock-detect-os-with
@@ -43,7 +43,7 @@
              "ubuntu"))
         (define mock-check-output 
           (λ (arguments)
-             (check-equal? arguments '("/usr/bin/dpkg-query" "-f" "'${binary:Package}\n'" "-W"))))
+             (check-equal? arguments '("/usr/bin/dpkg-query" "-f" "${binary:Package}\n" "-W"))))
 
         (get-packages-installed 
           #:detect-os-with mock-detect-os-with
