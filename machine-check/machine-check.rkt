@@ -68,4 +68,5 @@
            (thunk)))
        (parameterize ([current-check-around count-errors])
        (perform-checks)
-         (exit (min error-count 1))))))
+       (if (eq? error-count 0) (displayln "All tests pass!") '())
+       (exit (min error-count 1))))))
