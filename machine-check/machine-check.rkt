@@ -5,6 +5,7 @@
 (require racket/string)
 (require racket/port)
 (require racket/function)
+(require racket/file)
 (require rackunit)
 (require detect-os-release)
 
