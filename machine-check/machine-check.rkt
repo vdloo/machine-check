@@ -48,7 +48,8 @@
 (define check-package-installed
   (λ (package-name)
      (check-false (not (member package-name (get-packages-installed)))
-         (format "Package '~a' was not found installed" package-name))))
+         (format "Package '~a' was not found installed" package-name))
+     (display ".")))
 
 (define check-packages-installed
   (λ (package-names)
@@ -69,5 +70,5 @@
            (thunk)))
        (parameterize ([current-check-around count-errors])
        (perform-checks)
-       (if (eq? error-count 0) (displayln "All tests pass!") '())
+       (if (eq? error-count 0) (displayln "\nAll tests pass!") '())
        (exit (min error-count 1))))))
