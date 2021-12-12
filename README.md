@@ -16,6 +16,7 @@ If you want a quick copy-paste-able example:
 ```
 git clone https://github.com/vdloo/machine-check
 cd machine-check
+raco pkg install --deps search-auto
 sudo mkdir -p /srv/machine-check
 chown -R youruser.youruser /srv/machine-check
 # Look in examples/simple for inspiration
@@ -28,5 +29,6 @@ touch /srv/machine-check/main.rkt
 
 To run the unit tests for `machine-check` (for the software, not the system unit tests which the software is for) run:
 ```
+raco pkg install --deps search-auto
 make test
 ```
