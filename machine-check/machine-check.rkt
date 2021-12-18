@@ -11,6 +11,7 @@
 
 (provide machine-check)
 (provide get-packages-installed)
+(provide check-file-mode)
 
 (define error-count 0)
 
@@ -44,6 +45,16 @@
            [else (raise-arguments-error 
                    'os-not-supported 
                    (format "Your OS ~a is currently not supported by machine-check" os-id))])))))
+
+(define check-file-mode
+  (λ (path mode
+      #:file-or-directory-type-with [file-or-directory-type file-or-directory-type]
+      #:file-or-directory-permissions-with [file-or-directory-permissions file-or-directory-permissions])
+     (if (file-or-directory-type path #f)
+         ((λ ()
+           (check-equal? (file-or-directory-permissions path 'bits) mode) 
+           (display ".")))
+         (fail (format "No such path: ~a" path)))))
 
 (define check-package-installed
   (λ (package-name)
