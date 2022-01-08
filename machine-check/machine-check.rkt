@@ -58,24 +58,21 @@
            (display ".")))
          (fail (format "No such path: ~a" path)))))
 
-(define inner-check-file-contains
-  (λ (assertion-function content should-contain)
-     (assertion-function
-       (string-contains?
-         content 
-         should-contain))))
-
 (define check-file-contains
   (λ (path should-contain
       #:file->string-with [file->string file->string])
-     (inner-check-file-contains
-       check-true (file->string path) should-contain)))
+     (check-true
+       (string-contains?
+         (file->string path)
+         should-contain))))
 
 (define check-file-does-not-contain
   (λ (path should-contain
       #:file->string-with [file->string file->string])
-     (inner-check-file-contains
-       check-false (file->string path) should-contain)))
+     (check-false
+       (string-contains?
+         (file->string path)
+         should-contain))))
 
 (define check-package-installed
   (λ (package-name)
