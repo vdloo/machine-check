@@ -18,9 +18,9 @@
              (check-equal? path "/tmp/some-file-somewhere")
              (check-equal? mustexist #f)
              #t))
-        (define mock-file-or-directory-permissions-with (λ (path mode) 755))
+        (define mock-file-or-directory-permissions-with (λ (path mode) 493))
 
-        (check-file-mode "/tmp/some-file-somewhere" 755
+        (check-file-mode "/tmp/some-file-somewhere" 493
           #:file-or-directory-type-with mock-file-or-directory-type-with
           #:file-or-directory-permissions-with mock-file-or-directory-permissions-with))
 
@@ -31,9 +31,9 @@
           (λ (path mode) 
              (check-equal? path "/tmp/some-file-somewhere")
              (check-equal? mode 'bits)
-             755))
+             493))
 
-        (check-file-mode "/tmp/some-file-somewhere" 755
+        (check-file-mode "/tmp/some-file-somewhere" 493
           #:file-or-directory-type-with mock-file-or-directory-type-with
           #:file-or-directory-permissions-with mock-file-or-directory-permissions-with))
 
@@ -43,7 +43,7 @@
 
         (check-exn exn:fail?
           (λ ()
-          (check-file-mode "/tmp/some-file-somewhere" 755
+          (check-file-mode "/tmp/some-file-somewhere" 493
             #:file-or-directory-type-with mock-file-or-directory-type-with))))
        ))
 (run-tests check-tests))
