@@ -7,9 +7,12 @@ build:
 
 clean:
 	rm -rf out
+	rm -rf compiled
+	rm -rf machine-check/compiled
+	rm -rf machine-check/test/compiled
 
-run:
-	out/usr/bin/machine-check
+run: clean
+	racket main.rkt
 
 test:
 	raco test machine-check/test
