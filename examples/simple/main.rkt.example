@@ -6,4 +6,3 @@
 (define perform-main-checks
   (λ ()
     (check-package-installed "some-package")))
-

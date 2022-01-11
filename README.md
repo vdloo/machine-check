@@ -17,12 +17,9 @@ If you want a quick copy-paste-able example:
 git clone https://github.com/vdloo/machine-check
 cd machine-check
 raco pkg install --deps search-auto
-sudo mkdir -p /srv/machine-check
-chown -R youruser.youruser /srv/machine-check
-# Look in examples/simple for inspiration
-touch /srv/machine-check/main.rkt
+cp examples/simple/main.rkt.example checks-to-perform/main.rkt
 # And finally, run the program
-./main.rkt
+make run  # or ./main.rkt
 ```
 
 # Development
