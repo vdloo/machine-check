@@ -1,0 +1,8 @@
+#lang racket/base
+
+(require "../machine-check/check-helpers.rkt")
+(provide perform-shellserver-checks)
+
+(define perform-shellserver-checks
+  (λ ()
+    (check-package-installed "some-other-package")))

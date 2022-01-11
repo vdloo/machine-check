@@ -4,7 +4,7 @@
 (require rackunit/text-ui)
 (require racket/file)
 
-(require "../../machine-check.rkt")
+(require "../../check-helpers.rkt")
 
 (module+ test
   (define check-tests
