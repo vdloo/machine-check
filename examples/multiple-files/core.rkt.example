@@ -1,9 +1,8 @@
 #lang racket/base
 
 (require "../machine-check/check-helpers.rkt")
-(provide perform-main-checks)
+(provide perform-core-checks)
 
-(define perform-main-checks
+(define perform-core-checks
   (λ ()
     (check-package-installed "some-package")))
-

@@ -1,21 +1,25 @@
 # Examples
 
-A directory with examples of how to structure your /srv/machine-check directory.
+A directory with examples of how to structure your checks-to-perform directory.
 
-To use these examples do the following:
+First configure your checks in the `checks-to-perform` directory.
+
+Each file must be named the same as the `perform-*-checks` function it provides.
+
+So a file named `core.rkt` should `(provide perform-core-checks` and `(define perform-core-checks ...)` etc.
+
+First copy a test example file to `checks-to-perform`:
 ```
-sudo mkdir -p /srv/machine-check
-sudo chown youruser.youruser /srv/machine-check
-ln -s examples/simple/main.rkt /srv/machine-check/main.rkt
+$ cp examples/simple/main.rkt.example checks-to-perform/main.rkt
 ```
 
 Then run:
 ```
-$ machine-check  # or ./main.rkt
+$ make run  # or ./main.rkt or machine-check
 --------------------
 FAILURE
 name:       check-false
-location:   machine-check/machine-check.rkt:31:5
+location:   machine-check/check-helpers.rkt:83:5
 params:     '(#t)
-message:    "Package 'somenotinstalledpackage' was not found installed"
+message:    "Package 'some-package' was not found installed"
 ```

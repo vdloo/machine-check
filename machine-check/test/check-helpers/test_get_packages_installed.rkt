@@ -3,7 +3,7 @@
 (require rackunit)
 (require rackunit/text-ui)
 
-(require "../../machine-check.rkt")
+(require "../../check-helpers.rkt")
 
 (module+ test
   (define check-tests

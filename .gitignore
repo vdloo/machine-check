@@ -3,3 +3,4 @@
 compiled/
 doc/
 out/
+checks-to-perform/*.rkt

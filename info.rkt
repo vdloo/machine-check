@@ -3,6 +3,7 @@
 (define deps 
   '("base"
     "rackunit-lib"
+    "reprovide-lang-lib"
     "https://github.com/vdloo/detect-os-release.git"
     ))
 (define build-deps '())
