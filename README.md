@@ -2,6 +2,8 @@
 
 With machine-check you can write unit tests in Racket to verify if the state of your machine is what you expect.
 
+See the documentation at [https://vdloo.github.io/machine-check/](https://vdloo.github.io/machine-check/).
+
 # Description
 
 If you use configuration management tools you might want to check if the state of your machine is exactly as you expected it after applying the state. For example after a Puppet, SaltStack or Ansible run it might be wise to check if you actually have the packages installed that you wanted to enforce, and if the files you templated exist in the places and with the content you expected.
@@ -34,5 +36,5 @@ make test
 
 To generate the documentation run:
 ```
-make docs
+make docs  # Output in docs/index.html
 ```
