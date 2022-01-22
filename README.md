@@ -29,3 +29,10 @@ To run the unit tests for `machine-check` (for the software, not the system unit
 raco pkg install --deps search-auto
 make test
 ```
+
+# Documentation
+
+To generate the documentation run:
+```
+make docs
+```
