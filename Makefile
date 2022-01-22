@@ -15,7 +15,7 @@ run: clean
 	racket main.rkt
 
 docs: clean
-	rm docs/*
+	rm -rf docs
 	scribble --html +m --redirect-main http://docs.racket-lang.org/ --dest docs scribblings/index.scrbl
 
 test:

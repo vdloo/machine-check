@@ -30,6 +30,108 @@ cp examples/simple/main.rkt.example checks-to-perform/main.rkt
 make run  # or ./main.rkt
 }|
 
+@subsection{Example}
+
+This section contains some examples of what type of checks you can perform with machine-check.
+
+@subsubsection{Testing if packages are installed}
+
+Here are some examples for how to test if certain packages are installed on the machine.
+
+To test if @hyperlink["https://packages.debian.org/search?keywords=xorg"]{xorg} is installed on a Debian system you could create a check in checks-to-perform/packages.rkt. After cloning the repository and cd-ing into the machine-check directory you could do so like:
+
+@codeblock|{
+rm -rf checks-to-perform
+mkdir checks-to-perform
+cat << 'EOF' > checks-to-perform/packages.rkt
+#lang racket/base
+
+(require "../machine-check/check-helpers.rkt")
+(provide perform-packages-checks)
+
+(define perform-packages-checks
+  (λ ()
+    (check-package-installed "xorg")))
+EOF
+}|
+
+Note that it is significant that packages.rkt provides perform-packages-checks. Similarly a file named somethingelse.rkt would have to provide a function named perform-somethingelse-checks.
+
+If we would the run this we'd get:
+@codeblock|{
+root@devenvdebian:~/machine-check# make run
+rm -rf out
+rm -rf compiled
+rm -rf machine-check/compiled
+rm -rf machine-check/test/compiled
+racket main.rkt
+--------------------
+FAILURE
+name:       check-false
+location:   machine-check/check-helpers.rkt:83:5
+params:     '(#t)
+message:    "Package 'xorg' was not found installed"
+--------------------
+.make: *** [Makefile:15: run] Error 1
+root@devenvdebian:~/machine-check# echo $?
+2
+}|
+
+After installing xorg this would look like:
+
+@codeblock|{
+root@devenvdebian:~/machine-check# apt-get install xorg
+root@devenvdebian:~/machine-check# make run
+rm -rf out
+rm -rf compiled
+rm -rf machine-check/compiled
+rm -rf machine-check/test/compiled
+racket main.rkt
+All tests pass!
+root@devenvdebian:~/machine-check# echo $?
+0
+}|
+
+But imagine that we'd like to also run our test-suite on an Archlinux machine for example when our configuration management is set up to work with multiple distributions. In that case just testing for xorg would not be good enough anymore because on Arch Linux that package has a different name (there it is named xorg-server, not xorg).
+
+For that case we can use @hyperlink["https://github.com/vdloo/detect-os-release"]{detect-os-release}. With that we can conditionally test some package names if the Arch Linux os is detected, and some other on our Debian system.
+
+@codeblock|{
+rm -rf checks-to-perform
+mkdir checks-to-perform
+cat << 'EOF' > checks-to-perform/packages.rkt
+#lang racket
+
+(require "../machine-check/check-helpers.rkt")
+(require detect-os-release)
+(provide perform-packages-checks)
+
+(define perform-packages-checks
+  (λ ()
+    ; Install desktop packages
+    (let ((detected-os (detect-os))
+          ; Package names to check on all distros
+          (shellserver-packages (list
+    			      "chromium"
+    			      "terminator"
+    			      )))
+      (check-packages-installed
+        (if (equal? detected-os "arch")
+          ; Archlinux packages
+          (append shellserver-packages
+    	      (list
+    	        "xorg-xinit"
+    	        "xorg-server"
+    	      ))
+          ; Debian packages
+          (append shellserver-packages
+    	      (list
+    	        "xinit"
+    	        "xorg"
+    	      )))))))
+EOF
+}|
+
 @section{Development}
 
 To run the unit tests for machine-check (for the software, not the system unit tests which the software is for) run:
