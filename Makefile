@@ -15,7 +15,7 @@ run: clean
 	racket main.rkt
 
 docs: clean
-	scribble --html +m --redirect-main http://docs.racket-lang.org/ --dest docs scribblings/machine-check.scrbl
+	scribble --html +m --redirect-main http://docs.racket-lang.org/ --dest docs scribblings/index.scrbl
 
 test:
 	raco test machine-check/test
