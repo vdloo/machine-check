@@ -12,7 +12,7 @@ While very minimal, this project aspires to provide similar functionality to wha
 
 # Usage
 
-See the `examples` dir for an example of how to use this project. It comes down to placing your Racket unit tests in `/srv/machine-check/main.rkt` and running `machine-check`.
+See the `examples` dir for an example of how to use this project. It comes down to placing your Racket unit tests in `machine-check/checks-to-perform` and running `machine-check`.
 
 If you want a quick copy-paste-able example:
 ```
