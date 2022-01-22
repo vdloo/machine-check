@@ -1,6 +1,6 @@
 #lang scribble/manual
 
-@title{machine-check: Unit test your server configuration}
+@title{machine-check: Unit test your server configuration with Racket}
 @author{Rick van de Loo}
 
 @section{Introduction}
@@ -111,20 +111,20 @@ cat << 'EOF' > checks-to-perform/packages.rkt
     ; Install desktop packages
     (let ((detected-os (detect-os))
           ; Package names to check on all distros
-          (shellserver-packages (list
+          (packages-to-check (list
     			      "chromium"
     			      "terminator"
     			      )))
       (check-packages-installed
         (if (equal? detected-os "arch")
           ; Archlinux packages
-          (append shellserver-packages
+          (append packages-to-check
     	      (list
     	        "xorg-xinit"
     	        "xorg-server"
     	      ))
           ; Debian packages
-          (append shellserver-packages
+          (append packages-to-check
     	      (list
     	        "xinit"
     	        "xorg"
