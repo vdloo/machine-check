@@ -3,7 +3,7 @@
 @title{machine-check: Unit test your server configuration}
 @author{Rick van de Loo}
 
-@defmodulelang[machine-check]
+@defmodule[machine-check]
 
 @section{Introduction}
 
