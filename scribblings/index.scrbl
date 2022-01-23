@@ -30,9 +30,9 @@ cp examples/simple/main.rkt.example checks-to-perform/main.rkt
 make run  # or ./main.rkt
 }|
 
-@subsection{Example}
+@subsection{Writing tests}
 
-This section contains some examples of what type of checks you can perform with machine-check.
+This section contains some examples of what type of checks you can perform with machine-check. Any @racket[.rkt] file in @racket[checks-to-perform] will be loaded, and each of those files should provide a @racket[perform-<name>-checks] function.
 
 @subsubsection{Testing if packages are installed}
 
@@ -186,6 +186,65 @@ $ echo $?
 1
 }|
 
+@subsubsection{Conditional tests}
+
+If you install the @racket[machine-check] test files in @racket[checks-to-perform] as part of you configuration management as well it might be nice to have only certain checks run on systems with a specific role. For example, if your configuration management installs different packages on different servers you do not want to test for those packages on the servers where they should not be installed. This could be solved by templating the @racket[checks-to-perform] files in the configuration management, but an alternative approach could be to do this based on a file on disk.
+
+In SaltStack it is possible to see which states (roles) have been applied to this server. On the Salt minion you can see this by running:
+
+@verbatim|{
+salt-call state.show_states concurrent=true --out json
+{
+    "local": [
+        "base",
+        "someotherstate",
+    ]
+}
+}|
+
+We can output this to a file as part of our configuration management run so that later @racket[machine-check] can access this information:
+
+@verbatim|{
+salt-call state.show_states concurrent=true --out json | jq -r '.local | .[]' > /srv/applied_states
+}|
+
+Then in a check we can decide to skip testing of a certain package is installed if this server has not had a specific state applied to it.
+
+@codeblock|{
+rm -rf checks-to-perform
+mkdir checks-to-perform
+cat << 'EOF' > checks-to-perform/aptrepo.rkt
+#lang racket
+
+(require "../machine-check/check-helpers.rkt")
+(provide perform-aptrepo-checks)
+
+(define applied-states (file->lines "/srv/applied_states"))
+
+(define perform-aptrepo-checks
+  (if (member "aptrepo" applied-states)
+    (λ ()
+      (check-packages-installed
+        (list "reprepro")))
+    void))
+EOF
+}|
+
+Then if the role has not been applied to that server those tests will be skipped:
+@codeblock|{
+$ grep aptrepo /srv/applied_states
+$ racket main.rkt
+All tests pass!
+$ echo aptrepo >> /srv/applied_states
+$ racket main.rkt 
+--------------------
+FAILURE
+name:       check-false
+location:   machine-check/check-helpers.rkt:83:5
+params:     '(#t)
+message:    "Package 'reprepro' was not found installed"
+--------------------
+}|
 
 @section{Development}
 
