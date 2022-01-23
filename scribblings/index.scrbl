@@ -132,6 +132,61 @@ cat << 'EOF' > checks-to-perform/packages.rkt
 EOF
 }|
 
+@subsubsection{Testing file mode and content}
+
+If you do a lot of templating in your configuration management it might be smart to test files for their content. Also testing their access mode (permissions) can be convenient.
+
+@codeblock|{
+rm -rf checks-to-perform
+mkdir checks-to-perform
+cat << 'EOF' > checks-to-perform/files.rkt
+#lang racket
+
+(require "../machine-check/check-helpers.rkt")
+(provide perform-files-checks)
+
+(define perform-files-checks
+  (λ ()
+    (check-file-contains "/etc/ssh/sshd_config"
+      "PasswordAuthentication no")
+    ; Test that ssh_config is 644
+    (check-file-mode "/etc/ssh/sshd_config" 420)))
+EOF
+}|
+
+Take note that the permissions are checked using @racket[(file-or-directory-permissions path 'bits)] @hyperlink["https://docs.racket-lang.org/reference/Filesystem.html#%28def._%28%28quote._~23~25kernel%29._file-or-directory-permissions%29%29"]{from racket/file} which does not use the Unix filesystem three-digit octal value you might expect. Instead it is some other kind of platform-specific integer so it might be best to test it out before using it with @racket[check-file-mode].
+
+@codeblock|{
+$ stat -c "%a %n" /etc/ssh/sshd_config
+644 /etc/ssh/sshd_config
+$ racket
+> (file-or-directory-permissions "/etc/ssh/sshd_config" 'bits)
+420
+}|
+
+If the content is not as we expect in our @racket[/etc/ssh/sshd_config] the test would fail to indicate this:
+@codeblock|{
+$ racket main.rkt 
+--------------------
+FAILURE
+name:       check-true
+location:   machine-check/check-helpers.rkt:73:4
+params:     '(#f)
+message:
+  "File /etc/ssh/sshd_config did not contain 'PasswordAuthentication no' like we expected"
+--------------------
+--------------------
+FAILURE
+name:       check-equal?
+location:   machine-check/check-helpers.rkt:57:11
+actual:     439
+expected:   420
+--------------------
+$ echo $?
+1
+}|
+
+
 @section{Development}
 
 To run the unit tests for machine-check (for the software, not the system unit tests which the software is for) run:
